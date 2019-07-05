@@ -1,15 +1,21 @@
 module Sample.View
 
 open Elmish
+open Fulma
 open Fable.React
 open Fable.React.Props
-open System
 open Types
 
 let root model dispatch =
+    let header =
+        Navbar.navbar
+            [ Navbar.Color IsDark ]
+            [ Navbar.Brand.a [ ] [ Navbar.Item.a [] [ str "Sample Application" ] ] ]
+
     let viewNotFound = str "not found"
     div []
-        [ a [ Href "#" ] [ h1[] [ str "My GitHub Viewer" ] ]
+        [ header
+          a [ Href "#" ] [ h1[] [ str "My GitHub Viewer" ] ]
           (match model.Page with
           | NotFound -> viewNotFound
           | TopPage topPageModel -> Page.Top.root topPageModel (TopMsg >> dispatch)
