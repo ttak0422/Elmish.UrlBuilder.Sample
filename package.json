@@ -1,0 +1,18 @@
+{
+  "license": "MIT",
+  "scripts": {
+    "build": "webpack --mode=development"
+  },
+  "dependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.4",
+    "fable-compiler": "^2.3.6",
+    "fable-loader": "^2.1.6",
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.1",
+    "webpack-dev-server": "^3.3.1"
+  }
+}

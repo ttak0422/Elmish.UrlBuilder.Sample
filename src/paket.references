@@ -1,0 +1,11 @@
+Fsharp.Core
+Fable.Elmish.UrlBuilder
+Fable.SimpleHttp
+Fulma
+Thoth.Json
+
+group FableElmish
+    Fable.Core
+    Fable.Elmish
+    Fable.Elmish.React
+    Fable.Elmish.Browser
