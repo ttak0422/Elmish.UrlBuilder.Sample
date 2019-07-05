@@ -10,12 +10,11 @@ let root model dispatch =
     let header =
         Navbar.navbar
             [ Navbar.Color IsDark ]
-            [ Navbar.Brand.a [ ] [ Navbar.Item.a [] [ str "Sample Application" ] ] ]
+            [ Navbar.Brand.a [ ] [ Navbar.Item.a [ Navbar.Item.Props [ Href "#" ] ] [ str "Sample Application" ] ] ]
 
     let viewNotFound = str "not found"
     div []
         [ header
-          a [ Href "#" ] [ h1[] [ str "My GitHub Viewer" ] ]
           (match model.Page with
           | NotFound -> viewNotFound
           | TopPage topPageModel -> Page.Top.root topPageModel (TopMsg >> dispatch)
