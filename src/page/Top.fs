@@ -1,19 +1,20 @@
 module Sample.Page.Top
 
 open Elmish
+open Fulma
 open Fable.React
 open Fable.Core.JsInterop
 open Fable.React.Props
+open Fable.FontAwesome
 open GitHub
 open Sample.Route
 
 // Type
-
 type LoadingStatus =
-   | Init
-   | Waiting
-   | Loaded of User list
-   | Failed of exn
+    | Init
+    | Waiting
+    | Loaded of User list
+    | Failed of exn
 
 type Model =
     { Input : string
@@ -26,48 +27,82 @@ type Msg =
     | ReceiveErr of exn
 
 // State
-
-let init () =
+let init() =
     { Input = ""
       Status = Init }
 
 let update msg model : Model * Cmd<Msg> =
     match msg with
-    | Input input ->
-        { model with Input = input }, Cmd.none
+    | Input input -> { model with Input = input }, Cmd.none
     | Send ->
-        { model with
-            Input = ""
-            Status = Waiting }, Cmd.OfAsync.either searchUsers model.Input Receive ReceiveErr
-    | Receive (Ok users) ->
-        { model with Status = Loaded users}, Cmd.none
-    | Receive (Error e) ->
+        { model with Input = ""
+                     Status = Waiting },
+        Cmd.OfAsync.either searchUsers model.Input Receive ReceiveErr
+    | Receive(Ok users) -> { model with Status = Loaded users }, Cmd.none
+    | Receive(Error e) ->
         { model with Status = Failed <| failwithf "%s" e }, Cmd.none
-    | ReceiveErr e ->
-        { model with Status = Failed e}, Cmd.none
+    | ReceiveErr e -> { model with Status = Failed e }, Cmd.none
 
 // View
-
 let root model dispatch =
-    let viewLink path label =
-        li [] [ a [ Href path ] [ str label ] ]
-    let viewUser user =
-        viewLink (Route.toHash <| User user.Login) user.Login
-    let viewUsers users =
-        ul [] (List.map viewUser users)
+    let onEnter msg dispatch =
+        function
+        | (e : Browser.Types.KeyboardEvent) when e.keyCode = 13. -> dispatch msg
+        | _ -> ()
+        |> OnKeyDown
 
-    div []
-        [ input
-            [ OnInput (fun x -> x.target?value |> string |> Input |> dispatch)
-              Value model.Input
-              Placeholder "GitHub name"
-              AutoFocus true ]
-          button
-            [ Disabled (model.Input.Length < 1)
-              OnClick (fun _ -> dispatch Send) ]
-            [ str "Send" ]
-          (match model.Status with
-           | Init -> str ""
-           | Waiting -> str "waiting..."
-           | Loaded users -> viewUsers users
-           | Failed e -> str <| string e) ]
+    let searchComponent =
+        let label = Label.label [] [ str "User Name" ]
+
+        let input =
+            Control.div [] [ Input.text [ Input.Props [ onEnter Send dispatch ]
+                                          Input.Placeholder "Ex: elmish"
+                                          Input.ValueOrDefault model.Input
+                                          Input.OnChange(fun e ->
+                                              !!e.target?value
+                                              |> Input
+                                              |> dispatch) ] ]
+
+        let button =
+            Control.div []
+                [ Button.button [ Button.Color IsPrimary
+                                  Button.IsLoading(model.Status = Waiting)
+                                  Button.OnClick(fun _ -> dispatch Send) ]
+                      [ str "Send" ] ]
+
+        Field.div []
+            [ label
+
+              Level.level []
+                  [ Level.left []
+                        [ Level.item []
+                              [ Field.div [ Field.HasAddons ] [ input; button ] ] ] ] ]
+
+    let viewLink path label = li [] [ a [ Href path ] [ str label ] ]
+
+    let viewUser (user : User) =
+        br [] |> ignore
+        viewLink (Route.toHash <| User user.Login) user.Login
+
+    let viewUsers users =
+        match users with
+        | [] -> div [] []
+        | [ user ] ->
+            div [] [ Text.p
+                         [ Modifiers [ Modifier.TextWeight TextWeight.Bold ] ]
+                         [ str "Result" ]
+                     ul [] [ viewUser user ] ]
+        | users ->
+            div [] [ Text.p
+                         [ Modifiers [ Modifier.TextWeight TextWeight.Bold ] ]
+                         [ str "Results" ]
+                     ul [] (List.map viewUser users) ]
+
+    let pageComponent =
+        match model.Status with
+        | Init
+        | Waiting -> str ""
+        | Loaded users -> viewUsers users
+        | Failed e -> str <| string e
+
+    div [] [ searchComponent; pageComponent ]
