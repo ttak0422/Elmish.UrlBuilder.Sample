@@ -85,17 +85,19 @@ let root model dispatch =
         viewLink (Route.toHash <| User user.Login) user.Login
 
     let viewUsers users =
+        let p text =
+            Text.p [ Modifiers [ Modifier.TextWeight TextWeight.Bold ] ]
+                [ str text ]
         match users with
-        | [] -> div [] []
+        | [] ->
+            Text.p [ Modifiers [ Modifier.TextWeight TextWeight.Bold
+                                 Modifier.TextColor IsDanger ] ]
+                [ str "Not Found" ]
         | [ user ] ->
-            div [] [ Text.p
-                         [ Modifiers [ Modifier.TextWeight TextWeight.Bold ] ]
-                         [ str "Result" ]
+            div [] [ p "Result"
                      ul [] [ viewUser user ] ]
         | users ->
-            div [] [ Text.p
-                         [ Modifiers [ Modifier.TextWeight TextWeight.Bold ] ]
-                         [ str "Results" ]
+            div [] [ p "Reults"
                      ul [] (List.map viewUser users) ]
 
     let pageComponent =
