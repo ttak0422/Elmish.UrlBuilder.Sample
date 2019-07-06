@@ -47,7 +47,11 @@ let update msg model : Model * Cmd<Msg> =
 let root model dispatch =
     let onEnter msg dispatch =
         function
-        | (e : Browser.Types.KeyboardEvent) when e.keyCode = 13. -> dispatch msg
+        | (e : Browser.Types.KeyboardEvent) when e.keyCode = 13. ->
+            if model.Input.Length > 0 then
+                dispatch msg
+            else
+                ()
         | _ -> ()
         |> OnKeyDown
 
@@ -67,6 +71,7 @@ let root model dispatch =
             Control.div []
                 [ Button.button [ Button.Color IsPrimary
                                   Button.IsLoading(model.Status = Waiting)
+                                  Button.Disabled (model.Input.Length < 1)
                                   Button.OnClick(fun _ -> dispatch Send) ]
                       [ str "Send" ] ]
 
