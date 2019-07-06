@@ -79,12 +79,11 @@ let root model dispatch =
                               [ Field.div [ Field.HasAddons ] [ input; button ] ] ] ] ]
 
     let viewLink path label = li [] [ a [ Href path ] [ str label ] ]
-
     let viewUser (user : User) =
-        br [] |> ignore
         viewLink (Route.toHash <| User user.Login) user.Login
+    let viewUsers users = ul [] (List.map viewUser users)
 
-    let viewUsers users =
+    let userComponent users =
         let p text =
             Text.p [ Modifiers [ Modifier.TextWeight TextWeight.Bold ] ]
                 [ str text ]
@@ -98,13 +97,13 @@ let root model dispatch =
                      ul [] [ viewUser user ] ]
         | users ->
             div [] [ p "Reults"
-                     ul [] (List.map viewUser users) ]
+                     viewUsers users ]
 
     let pageComponent =
         match model.Status with
         | Init
         | Waiting -> str ""
-        | Loaded users -> viewUsers users
+        | Loaded users -> userComponent users
         | Failed e -> str <| string e
 
     div [] [ searchComponent; pageComponent ]
