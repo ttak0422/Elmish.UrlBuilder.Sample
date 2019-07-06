@@ -12,7 +12,7 @@ open Sample.Route
 // Type
 type Status =
     | Init
-    | Loaded of (UserDetailed * Repo list)
+    | Loaded of (User * Repo list)
     | Failed of exn
 
 type Model =
@@ -21,7 +21,7 @@ type Model =
       Repos : Repo list }
 
 type Msg =
-    | Receive of Result<UserDetailed * Repo list, exn>
+    | Receive of Result<User * Repo list, exn>
     | ReceiveErr of exn
 
 // State
@@ -62,32 +62,18 @@ let root model dispatch =
                       [ Media.left []
                             [ Image.image [ Image.Is128x128 ]
                                   [ img [ Src user.AvatarUrl ] ] ]
-                        Media.content [] [ Text.p
-                                               [ Modifiers
-                                                     [ Modifier.TextAlignment
-                                                           (Screen.All,
-                                                            TextAlignment.Justified)
 
-                                                       Modifier.TextWeight
-                                                           TextWeight.Bold
+                        Media.content []
+                            [ Text.p
+                                  [ Modifiers
+                                        [ Modifier.TextAlignment
+                                              (Screen.All,
+                                               TextAlignment.Justified)
+                                          Modifier.TextWeight TextWeight.Bold
 
-                                                       Modifier.TextSize
-                                                           (Screen.All,
-                                                            TextSize.Is2) ] ]
-                                               [ str user.Name ]
-
-                                           Text.p
-                                               [ Modifiers
-                                                     [ Modifier.TextWeight
-                                                           TextWeight.Light
-
-                                                       Modifier.TextSize
-                                                           (Screen.All,
-                                                            TextSize.Is4) ] ]
-                                               [ str user.Login ]
-                                           Text.p [] [ (match user.Bio with
-                                                        | Some bio -> str bio
-                                                        | None -> str "") ] ] ] ]
+                                          Modifier.TextSize
+                                              (Screen.All, TextSize.Is2) ] ]
+                                  [ str user.Login ] ] ] ]
         Box.box' []
             [ user
 
