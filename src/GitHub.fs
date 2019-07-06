@@ -52,6 +52,20 @@ type User =
 
     static member DecodeList : Decoder<_> = Decode.list User.Decode
 
+type UserDetailed =
+    { Login : string
+      AvatarUrl : string
+      Name : string
+      Bio : string option }
+
+    static member Decode : Decoder<_> =
+        Decode.object (fun get ->
+            { Login = get.Required.Field "login" Decode.string
+              AvatarUrl = get.Required.Field "avatar_url" Decode.string
+              Name = get.Required.Field "name" Decode.string
+              Bio = get.Optional.Field "bio" Decode.string })
+
+
 let fetch url decoder =
     async {
         let! (status, res) = Http.get url
@@ -69,6 +83,10 @@ let getIssues (userName, projectName) =
         crossOrigin GITHUB_API_URL [ "repos"; userName; projectName; "issues" ]
             []
     fetch url Issue.DecodeList
+
+let getUser userName =
+    let url = crossOrigin GITHUB_API_URL [ "users"; userName ] []
+    fetch url UserDetailed.Decode
 
 let searchUsers userName =
     let url =

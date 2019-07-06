@@ -1,6 +1,8 @@
 Fsharp.Core
 Fable.Elmish.UrlBuilder
 Fable.SimpleHttp
+Fable.FontAwesome
+Fable.FontAwesome.Free
 Fulma
 Thoth.Json
 group FableElmish

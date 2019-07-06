@@ -5,6 +5,7 @@
   <ItemGroup>
     <Compile Include="GitHub.fs" />
     <Compile Include="Route.fs" />
+    <Compile Include="page/Utils.fs" />
     <Compile Include="page/Top.fs" />
     <Compile Include="page/Repo.fs" />
     <Compile Include="page/User.fs" />
