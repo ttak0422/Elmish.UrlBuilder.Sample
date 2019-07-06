@@ -1,6 +1,7 @@
 module Sample.Page.Repo
 
 open Elmish
+open Elmish.UrlBuilder
 open Fulma
 open Fable.React
 open Fable.React.Props
@@ -41,15 +42,16 @@ let update msg model : Model * Cmd<Msg> =
 
 // View
 let root model dispatch =
-    let viewIssues userName projectName (issue : Issue) =
+    let viewIssue userName projectName (issue : Issue) =
+        let url = Builder.crossOrigin "https://github.com" [ userName; projectName; "issues"; string issue.Number ] []
         li []
             [ span [] [ str <| "[" + issue.State + "]" ]
-
-              a [ Href
-                  <| "https://github.com/" + userName + "/" + projectName
-                     + "/issues/" + (string issue.Number)
+              a [ Href url
                   Target "_blank" ]
                   [ str <| sprintf "#%d %s" issue.Number issue.Title ] ]
+    let viewIssues userName projectName (issues : Issue list) =
+        let viewIssue = viewIssue userName projectName
+        ul [] (List.map viewIssue issues)
     match model.State with
     | Init -> Utils.loader
     | Failed e -> str <| string e
@@ -61,11 +63,19 @@ let root model dispatch =
                             [ Modifier.TextWeight TextWeight.Bold
                               Modifier.TextSize(Screen.All, TextSize.Is3) ] ]
                       [ str <| sprintf "%s/%s" model.UserName model.ProjectName ] ]
+        let issues =
+            let p text = Text.p [ Modifiers [ Modifier.TextWeight TextWeight.Bold ] ] [str text ]
+            match issues with
+            | [] -> p "There are no issues."
+            | [ issue ] ->
+                div []
+                  [ p "Issue"
+                    viewIssue model.UserName model.ProjectName issue ]
+
+            | issues ->
+                div []
+                  [ p "Issues"
+                    viewIssues model.UserName model.ProjectName issues ]
         Box.box' []
             [ projectName
-
-              Text.p [ Modifiers [ Modifier.TextWeight TextWeight.Bold ] ]
-                  [ str "Issues" ]
-
-              ul []
-                  (List.map (viewIssues model.UserName model.ProjectName) issues) ]
+              issues ]
