@@ -1,11 +1,9 @@
 module Sample.Page.User
 
 open Elmish
-open Elmish.UrlBuilder
 open Fulma
 open Fable.React
 open Fable.React.Props
-open Fable.FontAwesome
 open GitHub
 open Sample.Route
 
@@ -52,6 +50,25 @@ let update msg model : Model * Cmd<Msg> =
 // View
 let root model dispatch =
     let viewLink path label = li [] [ a [ Href path ] [ str label ] ]
+    let viewRepo repo =
+        viewLink (Route.toHash <| Repo(repo.Owner, repo.Name)) repo.Name
+    let viewRepos repos = ul [] (List.map viewRepo repos)
+
+    let repoComponent repos =
+        let p text =
+            Text.p [ Modifiers [ Modifier.TextWeight TextWeight.Bold ] ]
+                [ str text ]
+        match repos with
+        | [] ->
+            Text.p [ Modifiers [ Modifier.TextWeight TextWeight.Bold
+                                 Modifier.TextColor IsDanger ] ]
+                [ str "There are no repository." ]
+        | [ repo ] ->
+            div [] [ p "Repository"
+                     ul [] [ viewRepo repo ] ]
+        | repos ->
+            div [] [ p "Repositories"
+                     viewRepos repos ]
     match model.Status with
     | Init -> Utils.loader
     | Failed e -> str <| string e
@@ -74,15 +91,5 @@ let root model dispatch =
                                           Modifier.TextSize
                                               (Screen.All, TextSize.Is2) ] ]
                                   [ str user.Login ] ] ] ]
-        Box.box' []
-            [ user
-
-              Text.p [ Modifiers [ Modifier.TextWeight TextWeight.Bold ] ]
-                  [ str "Repositories" ]
-
-              ul []
-                  (repos
-                   |> List.map
-                          (fun repo ->
-                          viewLink (Route.toHash <| Repo(repo.Owner, repo.Name))
-                              repo.Name)) ]
+        Box.box' [] [ user
+                      repoComponent repos ]
