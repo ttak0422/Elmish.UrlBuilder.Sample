@@ -15,8 +15,7 @@ type Status =
 
 type Model =
     { Status : Status
-      User : User option
-      Repos : Repo list }
+      UserName : UserName }
 
 type Msg =
     | Receive of Result<User * Repo list, exn>
@@ -35,8 +34,7 @@ let init userName =
 
     let model =
         { Status = Init
-          User = None
-          Repos = [] }
+          UserName = userName }
 
     model, Cmd.OfAsync.either get () Receive ReceiveErr
 

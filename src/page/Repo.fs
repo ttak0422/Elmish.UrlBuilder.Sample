@@ -6,6 +6,7 @@ open Fulma
 open Fable.React
 open Fable.React.Props
 open GitHub
+open Sample.Route
 
 // Type
 type State =
@@ -14,8 +15,8 @@ type State =
     | Failed of exn
 
 type Model =
-    { UserName : string
-      ProjectName : string
+    { UserName : UserName
+      ProjectName : ProjectName
       State : State }
 
 type Msg =
