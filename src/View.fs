@@ -12,7 +12,7 @@ let root (model : Model) dispatch =
     let header =
         Navbar.navbar [ Navbar.Color IsDark ]
             [ Navbar.Brand.a []
-                  [ Navbar.Item.a [ Navbar.Item.Props [ Href "/" ] ]
+                  [ Navbar.Item.a [ Navbar.Item.Props [ Href <| Route.toHash Top ] ]
                         [ str "Sample Application" ] ] ]
 
     let breadcrumb =
