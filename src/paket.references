@@ -1,12 +1,10 @@
 Fsharp.Core
+Fable.Elmish
+Fable.Elmish.React
+Fable.Elmish.Browser
 Fable.Elmish.UrlBuilder
 Fable.SimpleHttp
 Fable.FontAwesome
 Fable.FontAwesome.Free
 Fulma
 Thoth.Json
-group FableElmish
-Fable.Core
-Fable.Elmish
-Fable.Elmish.React
-Fable.Elmish.Browser

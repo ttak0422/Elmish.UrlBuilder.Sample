@@ -15,10 +15,10 @@ type Route =
 module Route =
     let toHash route =
         match route with
-        | Top -> Builder.absolute [] []
-        | User userName -> Builder.absolute [ "user"; userName ] []
+        | Top -> Builder.relative [] []
+        | User userName -> Builder.relative [ "user"; userName ] []
         | Repo(userName, projectName) ->
-            Builder.absolute [ "repo"; userName; projectName ] []
+            Builder.relative [ "repo"; userName; projectName ] []
         |> fun url -> "#" + url
 
 let parser : Parser<Route -> Route, Route> =
