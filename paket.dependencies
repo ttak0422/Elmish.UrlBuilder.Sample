@@ -1,5 +1,8 @@
 source https://www.nuget.org/api/v2
 storage: none
+nuget Fable.Elmish
+nuget Fable.Elmish.React
+nuget Fable.Elmish.Browser
 nuget Fable.Elmish.UrlBuilder
 nuget Fable.FontAwesome
 nuget Fable.FontAwesome.Free
@@ -7,10 +10,3 @@ nuget Fable.SimpleHttp
 nuget FSharp.Core redirects: force
 nuget Fulma
 nuget Thoth.Json
-
-group FableElmish
-    source https://www.nuget.org/api/v2
-    storage: none
-    nuget Fable.Elmish
-    nuget Fable.Elmish.React
-    nuget Fable.Elmish.Browser
