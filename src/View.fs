@@ -9,11 +9,38 @@ open Types
 open Route
 
 let root (model : Model) dispatch =
-    let header =
+    let navbarBrand =
+        Navbar.Brand.a []
+            [ Navbar.Item.a 
+                [ Navbar.Item.Props [ Href <| Route.toHash Top ] ]
+                [ str "Sample Application" ] ]
+
+    let navbarEnd =
+        Navbar.End.div []
+            [ Navbar.Item.div []
+                [ Field.div [ Field.IsGrouped ]
+                    [ Control.p []
+                        [ Button.a [ Button.Props [ Href "https://github.com/ttak0422/Elmish.UrlBuilder"
+                                                    Target "_blank" ] ]
+                            [ Icon.icon []
+                                [ Fa.i [ Fa.Brand.Github
+                                         Fa.Size Fa.FaLarge ]
+                                    [] ]
+                              span [] [ str "GitHub(UrlBuilder)" ] ] ] 
+                      Control.p []
+                        [ Button.a [ Button.Props [ Href "https://github.com/ttak0422/Elmish.UrlBuilder.Sample"
+                                                    Target "_blank" ] ]
+                            [ Icon.icon []
+                                [ Fa.i [ Fa.Brand.Github
+                                         Fa.Size Fa.FaLarge ]
+                                    [] ]
+                              span [] [ str "GitHub(This Sample Application)" ] ] ] ] ] ]
+
+    let navbar =
         Navbar.navbar [ Navbar.Color IsDark ]
-            [ Navbar.Brand.a []
-                  [ Navbar.Item.a [ Navbar.Item.Props [ Href <| Route.toHash Top ] ]
-                        [ str "Sample Application" ] ] ]
+            [ Container.container []
+                [ navbarBrand
+                  navbarEnd ] ]
 
     let breadcrumb =
         match model.Page with
@@ -73,4 +100,7 @@ let root (model : Model) dispatch =
                                  breadcrumb
                                  pageview ]
 
-    div [] [ header; body ]
+    div 
+        [] 
+        [ navbar
+          body ]
