@@ -11,7 +11,7 @@
     "react-dom": "^16.8.6"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.4",
+    "@babel/core": "^7.8.3",
     "fable-compiler": "^2.4.12",
     "fable-loader": "^2.1.6",
     "webpack": "^4.41.5",
